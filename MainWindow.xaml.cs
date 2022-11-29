@@ -104,7 +104,10 @@ namespace WXWorkGroupSendMessage
 
                 int index = SendTemplateTB.Text.IndexOf(_tempImagePath.PicStringPlaceholder(), findIndexOfCount);
 
-                SendTemplateTB.Text = SendTemplateTB.Text.Remove(index, _tempImagePath.PicStringPlaceholder().Length);
+                if (index >= 0)
+                {
+                    SendTemplateTB.Text = SendTemplateTB.Text.Remove(index, _tempImagePath.PicStringPlaceholder().Length);
+                }
 
                 MorePicWP.Children.Remove((UIElement)sender);
             }

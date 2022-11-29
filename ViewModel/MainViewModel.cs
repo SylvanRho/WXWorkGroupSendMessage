@@ -87,20 +87,34 @@ namespace WXWorkGroupSendMessage.ViewModel
         public bool WhetherItIsMassModel
         {
             get => _whetherItIsMassModel;
-            set => SetProperty(ref _whetherItIsMassModel, value);
+            set
+            {
+                SetProperty(ref _whetherItIsMassModel, value);
+                if (_whetherItIsMassModel)
+                {
+                    ReplayUserName = string.Empty;
+                }
+            }
         }
 
 
         /// <summary>
         /// 替换的模板名称
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "替换名称不能为空")]
+        [Required(AllowEmptyStrings = true, ErrorMessage = "替换名称不能为空")]
         public string ReplayUserName
         {
             get => _replayUserName;
             set
             {
-                SetProperty(ref _replayUserName, value.Trim(), true);
+                if (_whetherItIsMassModel)
+                {
+                    SetProperty(ref _replayUserName, value);
+                }
+                else
+                {
+                    SetProperty(ref _replayUserName, value.Trim(), true);
+                }
             }
         }
 
@@ -153,7 +167,7 @@ namespace WXWorkGroupSendMessage.ViewModel
 
         private bool CanStartSendMsgCommand()
         {
-            if (string.IsNullOrEmpty(SendInputText) || string.IsNullOrEmpty(Path) || string.IsNullOrEmpty(ReplayUserName))
+            if (string.IsNullOrEmpty(SendInputText) || string.IsNullOrEmpty(Path) || (!WhetherItIsMassModel && string.IsNullOrEmpty(ReplayUserName)))
                 return false;
 
             return true;
@@ -194,7 +208,6 @@ namespace WXWorkGroupSendMessage.ViewModel
 
 
             //------分割线---------
-
             bool isSendUserFile = File.Exists(Path);
             if (isSendUserFile)
             {
@@ -204,7 +217,11 @@ namespace WXWorkGroupSendMessage.ViewModel
 
                 foreach (var sendUserName in sendTextArray)
                 {
-                    var tempSendText = text.Replace(ReplayUserName, sendUserName);
+                    if (string.IsNullOrEmpty(sendUserName))
+                        continue;
+                    string tempSendText = sendUserName;
+                    if (!string.IsNullOrEmpty(ReplayUserName))
+                        tempSendText = text.Replace(ReplayUserName, sendUserName);
                     SendWXWorkMsg(sendUserName, tempSendText, hwnd);
                 }
 
@@ -275,7 +292,11 @@ namespace WXWorkGroupSendMessage.ViewModel
             {
                 foreach (var itemStr in splitString)
                 {
-                    string tempItemStr = itemStr.Replace(ReplayUserName, sendUserName);
+                    string tempItemStr = sendUserName;
+                    if (!string.IsNullOrEmpty(ReplayUserName))
+                    {
+                        tempItemStr = itemStr.Replace(ReplayUserName, sendUserName);
+                    }
                     if (Regex.IsMatch(tempItemStr, StringExtension.PicPathRegexStr))
                     {
                         string[] contents = tempItemStr.RegexSplitPicPath();

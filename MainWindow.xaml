@@ -25,6 +25,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/ColorDictionary.xaml" />
                 <ResourceDictionary Source="Styles/TextBoxStyles.xaml" />
+                <ResourceDictionary Source="Styles/Geometries.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
@@ -127,8 +128,9 @@
                         Text="{Binding SendInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         TextWrapping="Wrap"
                         VerticalScrollBarVisibility="Auto" />
-                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" >
                         <CheckBox
+                            x:Name="WhetherItIsMassModelCB"
                             Grid.Column="2"
                             Margin="0,32,32,32"
                             Content="是否是群发模式"
@@ -137,6 +139,7 @@
                             IsChecked="{Binding WhetherItIsMassModel}" />
 
                         <hc:TextBox
+                            IsEnabled="{Binding ElementName=WhetherItIsMassModelCB,Path=IsChecked,Converter={StaticResource Boolean2BooleanReConverter}}"
                             Margin="0,0,15,0"
                             hc:InfoElement.Necessary="True"
                             hc:InfoElement.Placeholder="请输入模板中需要替换的名称"
@@ -250,6 +253,13 @@
                     FontSize="20"
                     FontWeight="Bold"
                     Style="{StaticResource ButtonPrimary}" />
+                <Button hc:IconElement.Geometry="{StaticResource ThumbsUpGeometry}" Grid.Row="6" Cursor="Hand" Margin="20" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <hc:FloatingBlock.ContentTemplate>
+                        <DataTemplate>
+                            <Path Stretch="Uniform" Data="{StaticResource ThumbsUpGeometry}" Fill="{DynamicResource DangerBrush}" Width="16" Height="16"/>
+                        </DataTemplate>
+                    </hc:FloatingBlock.ContentTemplate>
+                </Button>
             </Grid>
         </Grid>
     </Border>
