@@ -1,0 +1,258 @@
+﻿<Window
+    x:Class="WXWorkGroupSendMessage.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:WXWorkGroupSendMessage"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:WXWorkGroupSendMessage.ViewModel"
+    Title="群发小助手"
+    Width="1366"
+    WindowState="Normal"
+    Height="768"
+    d:DataContext="{d:DesignInstance vm:MainViewModel}"
+    d:DesignHeight="768"
+    d:DesignWidth="1366"
+    Background="White"
+    FontSize="13"
+    Foreground="#333333"
+    MouseLeftButtonDown="Window_MouseLeftButtonDown"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/ColorDictionary.xaml" />
+                <ResourceDictionary Source="Styles/TextBoxStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Window.Resources>
+    <Border
+        Background="{StaticResource CloudDrawingBrush}"
+        BorderBrush="{DynamicResource BorderBrush}"
+        BorderThickness="0,1,0,0">
+        <Grid>
+            <Button
+                x:Name="LostFocusBtn"
+                Width="0"
+                Height="0" />
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <!--  选择发送人  -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="15,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="30"
+                            FontWeight="Bold"
+                            Foreground="Red"
+                            Text="·" />
+                        <TextBlock
+                            Margin="4,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="20">
+                            <Run Text="请选择需要群发的人员文件：" />
+                        </TextBlock>
+
+                    </StackPanel>
+
+
+                    <Button
+                        Grid.Column="1"
+                        Margin="15,15,350,15"
+                        VerticalAlignment="Center"
+                        hc:InfoElement.Placeholder="路径"
+                        Command="{Binding SelectSendUserFile}"
+                        Content="{Binding Path, Mode=TwoWay}"
+                        Cursor="Hand"
+                        Foreground="#666666"
+                        Style="{StaticResource CustomButtonBaseStyle}" />
+
+                </Grid>
+
+
+                <hc:Divider
+                    Grid.Row="1"
+                    Margin="10,0"
+                    LineStroke="#999999" />
+
+                <!--  文本输入部分  -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="15,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="30"
+                            FontWeight="Bold"
+                            Foreground="Red"
+                            Text="·" />
+                        <TextBlock
+                            Margin="4,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="20">
+                            <Run Text="请输入需要发送的内容：" />
+                        </TextBlock>
+
+                    </StackPanel>
+
+                    <TextBox
+                        x:Name="SendTemplateTB"
+                        Grid.Column="1"
+                        Margin="15"
+                        VerticalContentAlignment="Top"
+                        AcceptsReturn="True"
+                        BorderBrush="#666666"
+                        Foreground="#666666"
+                        Text="{Binding SendInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                        <CheckBox
+                            Grid.Column="2"
+                            Margin="0,32,32,32"
+                            Content="是否是群发模式"
+                            Cursor="Hand"
+                            FontSize="15"
+                            IsChecked="{Binding WhetherItIsMassModel}" />
+
+                        <hc:TextBox
+                            Margin="0,0,15,0"
+                            hc:InfoElement.Necessary="True"
+                            hc:InfoElement.Placeholder="请输入模板中需要替换的名称"
+                            hc:InfoElement.Title="替换名称"
+                            MaxLength="13"
+                            Text="{Binding ReplayUserName, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                </Grid>
+
+                <hc:Divider
+                    Grid.Row="3"
+                    Margin="10,0"
+                    LineStroke="#999999" />
+
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <hc:ImageSelector
+                        x:Name="SingleImageSelector"
+                        Width="100"
+                        Height="100"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        BorderThickness="2"
+                        Cursor="Hand"
+                        ImageSelected="ImageSelector_ImageSelected"
+                        ImageUnselected="ImageSelector_ImageUnselected"
+                        IsEnabled="{Binding ElementName=IsSendPic, Path=IsChecked}"
+                        IsEnabledChanged="SingleImageSelector_IsEnabledChanged"
+                        PreviewMouseDown="ImageSelector_PreviewMouseDown"
+                        StrokeThickness="2"
+                        Visibility="{Binding ElementName=IsMorePicCB, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}" />
+
+                    <Border
+                        Grid.Row="1"
+                        Margin="16"
+                        BorderBrush="#666666"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Visibility="{Binding ElementName=IsMorePicCB, Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <hc:ScrollViewer hc:ScrollViewerAttach.AutoHide="False" IsInertiaEnabled="True">
+                            <WrapPanel x:Name="MorePicWP" Orientation="Horizontal">
+                                <WrapPanel.Resources>
+                                    <Style BasedOn="{StaticResource {x:Type hc:ImageSelector}}" TargetType="hc:ImageSelector">
+                                        <Setter Property="Width" Value="100" />
+                                        <Setter Property="Height" Value="100" />
+                                        <Setter Property="Margin" Value="10" />
+                                        <Setter Property="Cursor" Value="Hand" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                                        <Setter Property="StrokeThickness" Value="2" />
+                                        <Setter Property="BorderThickness" Value="2" />
+                                    </Style>
+                                </WrapPanel.Resources>
+                                <hc:ImageSelector
+                                    ImageSelected="ImageSelector_MorePic_ImageSelected"
+                                    ImageUnselected="ImageSelector_MorePic_ImageUnselected"
+                                    PreviewMouseDown="ImageSelector_PreviewMouseDown" />
+                            </WrapPanel>
+                        </hc:ScrollViewer>
+                    </Border>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <CheckBox
+                            x:Name="IsSendPic"
+                            Content="是否发送图片"
+                            Cursor="Hand"
+                            FontSize="15"
+                            IsChecked="{Binding IsSendPic}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Content="图片是否分开发送"
+                            Cursor="Hand"
+                            FontSize="15"
+                            IsChecked="{Binding WhetherToSendPicture}"
+                            IsEnabled="{Binding ElementName=IsSendPic, Path=IsChecked}"
+                            IsEnabledChanged="CheckBox_IsEnabledChanged" />
+                        <CheckBox
+                            x:Name="IsMorePicCB"
+                            Grid.Row="2"
+                            Checked="IsMorePicCB_Checked"
+                            Content="是否是多张照片"
+                            Cursor="Hand"
+                            FontSize="15"
+                            IsChecked="{Binding IsMorePicCB}"
+                            IsEnabled="{Binding ElementName=IsSendPic, Path=IsChecked}"
+                            IsEnabledChanged="CheckBox_IsEnabledChanged"
+                            Unchecked="IsMorePicCB_Unchecked" />
+                    </Grid>
+                </Grid>
+                <hc:Divider
+                    Grid.Row="5"
+                    Margin="10,0"
+                    LineStroke="#999999" />
+
+                <Button
+                    Grid.Row="6 "
+                    Width="150"
+                    Height="50"
+                    Command="{Binding StartSendMsgCommand}"
+                    Content="开始执行"
+                    Cursor="Hand"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Style="{StaticResource ButtonPrimary}" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
+
+
