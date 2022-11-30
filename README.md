@@ -16,3 +16,4 @@ xxx|xxxx|xx|xx
 ### 单人
 ![image](https://user-images.githubusercontent.com/51361195/204464540-582b00dd-2769-41f0-a346-aa7ad7a6a235.png)
 ### 群发
+![image](https://user-images.githubusercontent.com/51361195/204690440-e6168976-577d-4083-a83e-b2af72516539.png)
